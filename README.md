@@ -1,110 +1,220 @@
-# Cloud System Info
+# ☁️ Cloud System Info
 
-A Flask-based web application deployed on AWS to demonstrate a secure, segmented Linux environment with a Bastion Host, a private EC2 instance, and Nginx as the service layer.
+Projeto de infraestrutura cloud desenvolvido para demonstrar conhecimentos práticos em **AWS, Linux, segurança de rede e deploy de aplicações em ambiente controlado**, com foco em bases que são muito valorizadas em vagas de **Engenharia de Dados**.
 
-This project was built to simulate a real infrastructure scenario: a publicly reachable entry point for administration, a private server with no public IP, and controlled access between both layers.
+A proposta do projeto foi simular uma arquitetura real de produção com:
 
-## Overview
+* um **Bastion Host** para acesso administrativo
+* uma **instância privada EC2** sem IP público
+* **Nginx** como camada de serviço
+* uma aplicação **Flask** executada em ambiente Linux
+* regras de segurança baseadas em **Security Groups**
 
-The application runs inside a private Ubuntu EC2 instance and is accessed only through the designed network path. The Bastion Host is used for SSH administration, while Nginx serves as the public-facing service layer. During testing and demonstration, ngrok was used as a temporary public tunnel.
+Este repositório mostra domínio de fundamentos importantes para Engenharia de Dados, especialmente em contextos que envolvem **cloud, isolamento de rede, servidores Linux e infraestrutura para serviços de dados**.
 
-## Architecture
+---
+
+## 📋 Índice
+
+* [Sobre o Projeto](#sobre-o-projeto)
+* [Objetivo](#objetivo)
+* [Arquitetura](#arquitetura)
+* [O que este projeto demonstra](#o-que-este-projeto-demonstra)
+* [Stack Tecnológica](#stack-tecnológica)
+* [Segurança da Arquitetura](#segurança-da-arquitetura)
+* [Como Foi Construído](#como-foi-construído)
+* [Estrutura do Projeto](#estrutura-do-projeto)
+* [Deploy](#deploy)
+* [Possíveis Melhorias](#possíveis-melhorias)
+* [Aprendizados](#aprendizados)
+* [Relação com Engenharia de Dados](#relação-com-engenharia-de-dados)
+* [Contato](#contato)
+
+---
+
+## Sobre o Projeto
+
+Este projeto foi criado como exercício prático de infraestrutura cloud na AWS, com uma arquitetura pensada para representar cenários comuns em ambientes profissionais.
+
+A aplicação principal é uma interface simples em Flask, mas o foco real do repositório está na **estrutura de rede, no isolamento da instância privada e na forma como o acesso ao sistema foi organizado**.
+
+Em vez de expor a aplicação diretamente à internet, a solução utiliza uma arquitetura mais próxima da realidade de produção, com pontos de acesso controlados e camadas de segurança.
+
+---
+
+## Objetivo
+
+O principal objetivo do projeto foi praticar e demonstrar:
+
+* criação e gerenciamento de instâncias EC2
+* administração de servidores Ubuntu
+* acesso remoto via SSH
+* arquitetura com **Bastion Host**
+* segmentação entre ambiente público e privado
+* controle de tráfego com **Security Groups**
+* deploy de aplicação em ambiente cloud
+* uso de **Nginx** como camada intermediária
+
+Esse tipo de conhecimento é muito útil em vagas de Engenharia de Dados porque pipelines e serviços de dados normalmente rodam em ambientes que exigem **segurança, automação, rede bem configurada e servidores bem administrados**.
+
+---
+
+## Arquitetura
+
+Fluxo da infraestrutura:
 
 ```text
+Usuário
+   |
+   v
 Internet
-   ↓
+   |
+   v
 ngrok
-   ↓
-Bastion Host (Ubuntu, public IP)
-   ↓ SSH
-Private EC2 (Ubuntu, no public IP)
-   ↓
-Nginx service
-   ↓
-Flask application
+   |
+   v
+Bastion Host
+(Ubuntu EC2 - IP Público)
+   |
+   | SSH
+   v
+Private EC2
+(Ubuntu - Sem IP Público)
+   |
+   v
+Nginx
+   |
+   v
+Flask Application
 ```
 
-## What This Project Demonstrates
+A ideia dessa arquitetura é manter a instância principal protegida, sem exposição direta à internet, e centralizar o acesso administrativo em um ponto controlado.
 
-* Linux administration with Ubuntu
-* SSH access through a Bastion Host
-* AWS EC2 networking and segmentation
-* Security Group-based access control
-* Nginx as a service and reverse proxy
-* Flask application deployment
-* Controlled public exposure for testing and validation
-* Technical documentation and infrastructure thinking
+---
 
-## Features
+## O que este projeto demonstra
 
-* Home page with navigation
-* Status page with server information
-* Flask application running in a cloud environment
-* Private server access only through the Bastion Host
-* Restricted inbound traffic on the private instance
+Este projeto foi pensado para mostrar competências que ajudam bastante em vagas de Engenharia de Dados, Cloud e Infraestrutura.
 
-## Security Design
+### Cloud e AWS
 
-* The private EC2 instance has **no public IP**
-* SSH access is allowed only from the Bastion Host
-* HTTP/HTTPS are blocked on the private instance
-* Administrative access is centralized through the Bastion Host
-* Network exposure is intentionally minimized
+* criação de servidores EC2
+* entendimento de arquitetura pública e privada
+* noções de VPC e segmentação de rede
+* uso de Security Groups como firewall virtual
 
-## Stack
+### Linux
+
+* administração de Ubuntu Server
+* instalação e configuração de serviços
+* uso do terminal para gestão da aplicação
+* organização de ambiente em servidor
+
+### Segurança
+
+* princípio do menor privilégio
+* acesso controlado via Bastion Host
+* redução da superfície de ataque
+* bloqueio de acesso direto ao servidor privado
+
+### Deploy e operação
+
+* instalação de aplicação Python em ambiente Linux
+* uso de Nginx como serviço
+* validação de aplicação em cloud
+* exposição temporária com ngrok para testes
+
+---
+
+## Stack Tecnológica
+
+### Cloud
+
+* AWS EC2
+* Security Groups
+* VPC
+* Bastion Host
+
+### Sistema Operacional
+
+* Ubuntu Linux
+
+### Aplicação
 
 * Python
 * Flask
-* Ubuntu Linux
-* AWS EC2
-* Bastion Host
+
+### Serviços
+
 * Nginx
 * SSH
-* Security Groups
 * ngrok
 
-## How It Was Built
+---
 
-### 1. Flask application
+## Segurança da Arquitetura
 
-A lightweight Flask app was created with a simple home page and a status page.
+A infraestrutura foi desenhada para evitar exposição desnecessária.
 
-### 2. Linux environment
+### Private EC2
 
-The application was deployed on Ubuntu to mirror common cloud server environments.
+A instância privada foi configurada para:
 
-### 3. AWS architecture
+* não possuir IP público
+* não aceitar acesso externo direto
+* permitir acesso somente através do Bastion Host
 
-Two EC2 instances were used:
+### Bastion Host
 
-* one Bastion Host with a public IP
-* one private instance without public access
+O Bastion Host funciona como ponto de entrada administrativo e foi usado para:
 
-### 4. Access control
+* acesso SSH
+* gerenciamento remoto da instância privada
+* centralização das conexões
 
-Security Groups were configured so the private instance could only be reached from the Bastion Host.
+### Security Groups
 
-### 5. Nginx service
+As regras de segurança foram configuradas para:
 
-Nginx was configured as a service to sit in front of the application and act as the entry layer.
+* limitar portas abertas
+* permitir comunicação apenas entre recursos autorizados
+* restringir o acesso à instância privada
+* manter a infraestrutura mais protegida
 
-### 6. Public exposure for testing
+---
 
-ngrok was used only as a temporary tunnel for validation and demonstration.
+## Como Foi Construído
 
-## Deployment
+### 1. Criação da infraestrutura na AWS
 
-The application was deployed in the following flow:
+Foram criadas duas instâncias EC2:
 
-1. Create the AWS EC2 instances.
-2. Configure the Bastion Host with public access.
-3. Deploy the Flask app inside the private Ubuntu instance.
-4. Configure Nginx as the service layer.
-5. Restrict access to the private instance using Security Groups.
-6. Use the Bastion Host for SSH administration.
-7. Expose the service temporarily with ngrok for external validation.
+* uma instância pública atuando como Bastion Host
+* uma instância privada responsável pela aplicação
 
-## Project Structure
+### 2. Configuração do ambiente Linux
+
+A máquina privada foi preparada com Ubuntu para receber a aplicação e os serviços necessários.
+
+### 3. Instalação da aplicação Flask
+
+Uma aplicação simples foi criada para validar o funcionamento do ambiente cloud.
+
+### 4. Configuração do Nginx
+
+O Nginx foi utilizado como camada de serviço e reverse proxy, servindo de entrada para a aplicação.
+
+### 5. Controle de acesso
+
+As regras de rede foram ajustadas para garantir que a instância privada não ficasse exposta diretamente à internet.
+
+### 6. Validação externa
+
+O ngrok foi usado apenas como recurso temporário para teste e demonstração da aplicação.
+
+---
+
+## Estrutura do Projeto
 
 ```text
 cloud-system-info/
@@ -116,17 +226,75 @@ cloud-system-info/
 └── .gitignore
 ```
 
-## Learning Outcomes
+---
 
-This project helped me practice:
+## Deploy
 
-* cloud infrastructure basics
-* Linux server management
-* SSH and Bastion-based access
-* network isolation and security boundaries
-* service exposure and reverse proxy concepts
-* practical deployment workflow
+O processo de implantação seguiu os passos abaixo:
 
-## Final Note
+1. criação das instâncias EC2 na AWS
+2. configuração do Bastion Host com IP público
+3. instalação da aplicação Flask na instância privada
+4. configuração do Nginx como camada de serviço
+5. definição das regras de Security Groups
+6. teste do acesso entre as máquinas via SSH
+7. validação da aplicação por meio de túnel temporário
 
-This repository is more than a Flask app. It represents a complete infrastructure exercise focused on access control, Linux servers, and cloud deployment patterns.
+---
+
+## Possíveis Melhorias
+
+Para deixar este projeto ainda mais forte para Engenharia de Dados, algumas evoluções possíveis são:
+
+* adicionar **Terraform** para provisionamento da infraestrutura
+* criar uma **VPC completa** com subnets públicas e privadas
+* adicionar **PostgreSQL privado**
+* incluir **Amazon S3** como camada de armazenamento
+* integrar **Apache Airflow** para orquestração
+* criar um pipeline simples de ingestão de dados
+* adicionar monitoramento com **CloudWatch**
+* configurar logs centralizados
+* implementar CI/CD
+
+---
+
+## Aprendizados
+
+Durante esse projeto, pratiquei:
+
+* arquitetura cloud na AWS
+* administração de Linux
+* SSH e acesso remoto
+* segmentação de rede
+* segurança básica em ambientes de produção
+* deploy de aplicação em servidor
+* organização de infraestrutura com foco em controle e isolamento
+
+---
+
+## Relação com Engenharia de Dados
+
+Embora este repositório não seja um pipeline de dados em si, ele representa uma base muito importante para Engenharia de Dados.
+
+Em ambientes reais, soluções de dados costumam depender de:
+
+* servidores Linux
+* instâncias cloud
+* acesso controlado a serviços internos
+* bancos de dados privados
+* orquestração de pipelines
+* monitoramento e segurança
+
+Ter domínio de AWS, redes e servidores ajuda a entender melhor **onde os dados rodam, como os serviços se comunicam e como estruturar ambientes mais confiáveis para processamento de dados**.
+
+Esse projeto mostra justamente essa base de infraestrutura, que complementa muito bem projetos de ETL, orquestração e banco de dados.
+
+---
+
+## Contato
+
+**Ruan Pablo Matos do Sacramento**
+
+LinkedIn: https://www.linkedin.com/in/ruan-pablo-matos/
+
+E-mail: [ruankinu@gmail.com](mailto:ruankinu@gmail.com)
